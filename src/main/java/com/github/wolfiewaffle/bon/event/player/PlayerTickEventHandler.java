@@ -357,7 +357,7 @@ public class PlayerTickEventHandler {
         for (int x = -BIOME_RANGE_CHUNKS; x < BIOME_RANGE_CHUNKS + 1; x++) {
             for (int z = -BIOME_RANGE_CHUNKS; z < BIOME_RANGE_CHUNKS + 1; z++) {
                 BlockPos newPos = pos.offset(x * 16, 0, z * 16);
-                if (world.isLoaded(newPos)) biomeList.add(world.getBiome(newPos));
+                if (world.isLoaded(newPos)) biomeList.add(world.getBiome(newPos).value());
             }
         }
 
