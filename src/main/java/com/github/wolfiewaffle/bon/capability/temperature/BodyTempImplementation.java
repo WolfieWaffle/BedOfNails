@@ -6,8 +6,8 @@ public class BodyTempImplementation implements IBodyTemp {
     private static final String NBT_KEY_BODY_TEMP = "body_temp";
     private static final String NBT_KEY_TARGET_TEMP = "target_temp";
 
-    private float bodyTemp = 100f;
-    private float targetTemp = 100f;
+    private float bodyTemp = BodyTemp.OPTIMAL_TEMP;
+    private float targetTemp = BodyTemp.OPTIMAL_TEMP;
 
     @Override
     public float getTemp() {
