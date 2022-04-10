@@ -3,6 +3,7 @@ package com.github.wolfiewaffle.bon.client;
 import com.github.wolfiewaffle.bon.BONMod;
 import com.github.wolfiewaffle.bon.capability.temperature.BodyTemp;
 import com.github.wolfiewaffle.bon.capability.temperature.IBodyTemp;
+import com.github.wolfiewaffle.bon.config.Config;
 import com.github.wolfiewaffle.bon.event.player.PlayerTickEventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -37,7 +38,7 @@ public class RenderEventHandler extends Gui {
                 // Calculate change
                 float tempDiff = data.getTargetTemp() - data.getTemp();
                 float changeAmount = tempDiff / 150;
-                changeAmount *= BodyTemp.BASE_RATE;
+                changeAmount *= Config.baseSpeedModifier.get();
                 //changeAmount = BONMath.signMin(changeAmount, BodyTemp.MIN_CHANGE_AMOUNT);
                 changeAmount = (float) Math.pow(changeAmount, 2) * Math.signum(changeAmount);
                 changeAmount *= PlayerTickEventHandler.TICK_RATE_MULTIPLIER; // This ensures 1 changeAmount = 1 degree over one second
