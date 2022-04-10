@@ -4,6 +4,7 @@ import com.github.wolfiewaffle.bon.capability.BONCapabilityAttacher;
 import com.github.wolfiewaffle.bon.capability.temperature.BodyTemp;
 import com.github.wolfiewaffle.bon.client.ClientProxy;
 import com.github.wolfiewaffle.bon.client.RenderEventHandler;
+import com.github.wolfiewaffle.bon.config.Config;
 import com.github.wolfiewaffle.bon.event.player.PlayerTickEventHandler;
 import com.github.wolfiewaffle.bon.network.BonNetworkInit;
 import com.github.wolfiewaffle.bon.tools.command.BONCommands;
@@ -25,6 +26,9 @@ public class BONMod {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(BodyTemp::register);
+
+        // Config
+        Config.init();
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

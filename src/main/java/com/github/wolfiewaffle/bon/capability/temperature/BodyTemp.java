@@ -21,7 +21,6 @@ import static java.util.Map.entry;
 public class BodyTemp {
     public static final Capability<IBodyTemp> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
     public static final float OPTIMAL_TEMP = 70f;
-    public static final float BASE_RATE = 1f;
     public static Map<Player, List<TempModifier>> MOD_MAP = new HashMap<>();
     public static Map<Item, float[]> ARMOR_MODS;
     public static Map<Block, Float> BLOCK_MODS;
