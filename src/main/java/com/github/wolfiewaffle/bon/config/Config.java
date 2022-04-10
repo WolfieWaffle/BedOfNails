@@ -17,10 +17,10 @@ public class Config {
     public static void init() {
         //initServer();
         initCommon();
-        initClient();
+        //initClient();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG);
+        //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG);
     }
 
     private static void initServer() {
