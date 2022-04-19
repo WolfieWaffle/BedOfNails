@@ -1,5 +1,7 @@
 package com.github.wolfiewaffle.bon.capability.temperature;
 
+import java.util.ArrayList;
+
 public class TempModifier {
     private String name;
     private float targetMod;
@@ -25,6 +27,11 @@ public class TempModifier {
 
     public String getName() {
         return name;
+    }
+
+    public float apply(ArrayList<TempModifier> modlist) {
+        modlist.add(this);
+        return targetMod;
     }
 
     @Override

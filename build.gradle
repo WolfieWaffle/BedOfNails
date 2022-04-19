@@ -151,6 +151,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 	
 	implementation fg.deobf("curse.maven:tan-246391:3722886")
+    implementation fg.deobf("curse.maven:seasons-291874:3693807")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

@@ -3,6 +3,7 @@ package com.github.wolfiewaffle.bon.event.player;
 import com.github.wolfiewaffle.bon.capability.temperature.BodyTemp;
 import com.github.wolfiewaffle.bon.capability.temperature.IBodyTemp;
 import com.github.wolfiewaffle.bon.capability.temperature.TempModifier;
+import com.github.wolfiewaffle.bon.compat.CompatSereneSeasons;
 import com.github.wolfiewaffle.bon.config.Config;
 import com.github.wolfiewaffle.bon.network.BonNetworkInit;
 import com.github.wolfiewaffle.bon.network.BonPacket;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.PacketDistributor;
 import oshi.util.tuples.Pair;
 import toughasnails.api.enchantment.TANEnchantments;
@@ -56,37 +58,35 @@ public class PlayerTickEventHandler {
 
             // Add all modifiers
             TempModifier biomeMod = getBiomeMod(biomeData.getA());
-            target += biomeMod.getTargetMod();
+            target += biomeMod.apply(modList);
 
             TempModifier weatherMod = getWeatherMod(player);
-            target += weatherMod.getTargetMod();
+            target += weatherMod.apply(modList);
 
             TempModifier blockMod = getBlockMod(player, weatherMod.getTargetMod());
-            target += blockMod.getTargetMod();
+            target += blockMod.apply(modList);
 
             TempModifier armorMod = getArmorMod(player, currentTemp, target);
-            target += armorMod.getTargetMod();
+            target += armorMod.apply(modList);
 
             TempModifier insulationMod = getInsulationMod(biomeMod.getTargetMod() + blockMod.getTargetMod(), armorMod.getInsulation());
-            target += insulationMod.getTargetMod();
+            target += insulationMod.apply(modList);
 
             TempModifier sunMod = getSunMod(player, biomeData.getB());
-            target += sunMod.getTargetMod();
+            target += sunMod.apply(modList);
 
             TempModifier reflectionMod = getReflectionMod(player, sunMod.getTargetMod(), currentTemp);
-            target += reflectionMod.getTargetMod();
+            target += reflectionMod.apply(modList);
 
             TempModifier sweatMod = getSweatMod(currentTemp, target, biomeData.getB());
-            target += sweatMod.getTargetMod();
+            target += sweatMod.apply(modList);
 
-            modList.add(biomeMod);
-            modList.add(weatherMod);
-            modList.add(blockMod);
-            modList.add(armorMod);
-            modList.add(insulationMod);
-            modList.add(sunMod);
-            modList.add(reflectionMod);
-            modList.add(sweatMod);
+            // Serene Seasons compat
+            if (ModList.get().isLoaded("sereneseasons")) {
+                TempModifier seasonMod = getSeasonMod(player.level);
+                target += seasonMod.apply(modList);
+            }
+
 
             // Set target and difference
             tempDiff = target - currentTemp;
@@ -135,6 +135,10 @@ public class PlayerTickEventHandler {
                     BonNetworkInit.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new BonPacket(currentTemp, target));
                 }
         });
+    }
+
+    private TempModifier getSeasonMod(Level world) {
+        return new TempModifier("season", CompatSereneSeasons.getSeasonMod(world));
     }
 
     private TempModifier getWeatherMod(Player player) {
