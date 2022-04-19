@@ -8,9 +8,7 @@ import com.github.wolfiewaffle.bon.network.BonNetworkInit;
 import com.github.wolfiewaffle.bon.network.BonPacket;
 import com.github.wolfiewaffle.bon.tools.BONMath;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -133,9 +131,9 @@ public class PlayerTickEventHandler {
             if (currentTemp >= 90f) TANTemp.setLevel(TemperatureLevel.HOT);
 
             // Networking
-            if (player instanceof ServerPlayer) {
-                BonNetworkInit.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new BonPacket(currentTemp, target));
-            }
+                if (player instanceof ServerPlayer) {
+                    BonNetworkInit.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new BonPacket(currentTemp, target));
+                }
         });
     }
 
