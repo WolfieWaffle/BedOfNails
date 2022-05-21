@@ -1,15 +1,3 @@
 {
-    "type": "bon:liner",
-    "ingredients":[
-      {
-        "item": "minecraft:leather_chestplate"
-      },
-      {
-        "item": "minecraft:iron_chestplate"
-      }
-    ],
-    "result": {
-      "item": "minecraft:iron_chestplate"
-    },
-    "liner_target": "minecraft:iron_chestplate"
+    "type": "bon:liner"
 }
