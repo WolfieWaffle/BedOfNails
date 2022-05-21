@@ -13,6 +13,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue clientOption;
 
     public static ForgeConfigSpec.DoubleValue baseSpeedModifier;
+    public static ForgeConfigSpec.DoubleValue linerFactor;
     public static ForgeConfigSpec.DoubleValue seasonSpringMod;
     public static ForgeConfigSpec.DoubleValue seasonSummerMod;
     public static ForgeConfigSpec.DoubleValue seasonAutumnMod;
@@ -36,6 +37,10 @@ public class Config {
 
         builder.comment("General Settings").push("general");
         baseSpeedModifier = builder.comment("Multiply the speed at which you change temperature.").defineInRange("baseSpeedModifier", 1.0, 0, Double.MAX_VALUE);
+        builder.pop();
+
+        builder.comment("Armor Settings").push("armor");
+        linerFactor = builder.comment("How much of an armor item's stats are determined by it's liner. 0.5 means average the stats evenly. 1 means it will have exactly the stats of the liner. 0 means liners don't do anything.").defineInRange("linerFactor", 0.9, 0, 1);
         builder.pop();
 
         builder.comment("Serene Seasons Compatibility").push("seasons");

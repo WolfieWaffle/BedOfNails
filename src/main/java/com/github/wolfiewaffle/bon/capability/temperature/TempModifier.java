@@ -36,6 +36,6 @@ public class TempModifier {
 
     @Override
     public String toString() {
-        return name + " MOD: " + targetMod + (insulation != 0 ? "I: " + insulation : "");
+        return name + " MOD: " + targetMod + (insulation != 0 ? " I: " + insulation : "");
     }
 }

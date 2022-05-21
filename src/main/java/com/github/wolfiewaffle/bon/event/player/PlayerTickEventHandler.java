@@ -66,14 +66,17 @@ public class PlayerTickEventHandler {
             TempModifier blockMod = getBlockMod(player, weatherMod.getTargetMod());
             target += blockMod.apply(modList);
 
-            TempModifier armorMod = getArmorMod(player, currentTemp, target);
+            TempModifier armorMod = ArmorProvider.get(player, currentTemp, target);
             target += armorMod.apply(modList);
-
-            TempModifier insulationMod = getInsulationMod(biomeMod.getTargetMod() + blockMod.getTargetMod(), armorMod.getInsulation());
-            target += insulationMod.apply(modList);
 
             TempModifier sunMod = getSunMod(player, biomeData.getB());
             target += sunMod.apply(modList);
+
+            // Ambient Temp
+            float ambientTemp = biomeMod.getTargetMod() + blockMod.getTargetMod() + sunMod.getTargetMod() + weatherMod.getTargetMod();
+
+            TempModifier insulationMod = getInsulationMod(ambientTemp, armorMod.getInsulation());
+            target += insulationMod.apply(modList);
 
             TempModifier reflectionMod = getReflectionMod(player, sunMod.getTargetMod(), currentTemp);
             target += reflectionMod.apply(modList);
@@ -220,36 +223,37 @@ public class PlayerTickEventHandler {
     }
 
     private TempModifier getReflectionMod(Player player, float sunLevel, float currentTemp) {
+        float insulation = 0f;
 
         // No reflection if no sunlight
         if (sunLevel < 0) sunLevel = 0;
 
         // Account for insulation level of the armor, extra effect for helmet
         Iterable<ItemStack> armor = player.getArmorSlots();
-        float insulation = 0f;
 
         // For each armor item
         int slot = 0;
         for (ItemStack stack : armor) {
             if (stack != ItemStack.EMPTY) {
                 Item item = stack.getItem();
-                if (BodyTemp.ARMOR_MODS.containsKey(item)) {
 
-                    float addInsulation;
-                    // 1 is heat insulation
-                    addInsulation = Math.min(1, BodyTemp.ARMOR_MODS.get(item)[1]); // Cap material insulation at 1
-                    // Any covering is significant, unless the material is extreme
-                    addInsulation += 3;
-                    if (slot == HELMET_SLOT) addInsulation *= 3; // Helmets are extra important
+                // Get armor values
+                Float[] armorData = ArmorProvider.getModWithLiner(stack);
 
-                    // Thermal Tuning
-                    float optimalDirection = BodyTemp.OPTIMAL_TEMP - currentTemp;
-                    if (optimalDirection <= 0f) {
-                        if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) addInsulation = 0f;
-                    }
+                float addInsulation;
+                // 1 is heat insulation
+                addInsulation = Math.min(1, armorData[1]); // Cap material insulation at 1
+                // Any covering is significant, unless the material is extreme
+                addInsulation += 3;
+                if (slot == HELMET_SLOT) addInsulation *= 3; // Helmets are extra important
 
-                    insulation += addInsulation;
+                // Thermal Tuning
+                float optimalDirection = BodyTemp.OPTIMAL_TEMP - currentTemp;
+                if (optimalDirection <= 0f) {
+                    if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) addInsulation = 0f;
                 }
+
+                insulation += addInsulation;
             }
             slot ++;
         }
@@ -265,60 +269,9 @@ public class PlayerTickEventHandler {
 
     private TempModifier getInsulationMod(float ambientTemp, float insulation) {
         float ambientDiff = ambientTemp - BodyTemp.OPTIMAL_TEMP;
-        float insulationPercent = (ambientDiff * (insulation / 100)) * -1; // Each point of insulation is a percent
+        float insulationPercent = (ambientDiff * (insulation / 40)) * -1;
 
         return new TempModifier("insulation", insulationPercent);
-    }
-
-    /**
-     * Should be gotten after ambient temperature is determined
-     * @param player
-     * @param ambientTemp
-     * @return
-     */
-    private TempModifier getArmorMod(Player player, float currentTemp, float ambientTemp) {
-        Iterable<ItemStack> slots = player.getArmorSlots();
-        float ambientDirection = ambientTemp - currentTemp;
-        float optimalDirection = BodyTemp.OPTIMAL_TEMP - currentTemp;
-        float totalMod = 0f;
-        float totalInsulation = 0f;
-
-        for (ItemStack stack : slots) {
-            Item item = stack.getItem();
-
-            if (BodyTemp.ARMOR_MODS.containsKey(item)) {
-                /*
-                    TEMP MOD
-                 */
-                float mod = BodyTemp.ARMOR_MODS.get(item)[0];
-
-                // Thermal Tuning: Nullify mod if it points away from optimal temperature
-                if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) {
-                    if (Math.signum(mod) != Math.signum(optimalDirection)) mod = 0f;
-                }
-                totalMod += mod;
-
-                /*
-                    INSULATION MOD
-                 */
-                // Index is 1 for heat insulation, 2 for cold insulation
-                int insulIndex = 1;
-                if (ambientDirection < 0) insulIndex++;
-                float insulation = BodyTemp.ARMOR_MODS.get(item)[insulIndex];
-                if (ambientDirection == 0) insulation = 0f; // No insulation effect if we match ambient
-
-                // Thermal Tuning: Nullify insulation if it is bringing you away from optimal temperature
-                if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) {
-                    // Insulation is based on ambient, so if ambient matches optimal, it should be good
-                    // HOWEVER insulation REDUCES ambient effects, so we keep it if it DOESN'T match
-                    // We must also multiply by the sign of the insulation, since it can be negative
-                    if (Math.signum(ambientDirection * Math.signum(insulation)) == Math.signum(optimalDirection)) insulation = 0f;
-                }
-                totalInsulation += insulation;
-            }
-        }
-
-        return new TempModifier("armor", totalMod, totalInsulation);
     }
 
     private TempModifier getBiomeMod(float mod) {
