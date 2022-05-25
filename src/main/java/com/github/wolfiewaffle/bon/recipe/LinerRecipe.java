@@ -95,12 +95,13 @@ public class LinerRecipe extends CustomRecipe {
                     }
                 }
 
-                if (list.size() == 2 && linerStack != null && baseStack != null) {
+                if (list.size() == 2 && linerStack.getItem() != Items.AIR && baseStack.getItem() != Items.AIR) {
                     ItemStack returnStack = baseStack.copy();
 
                     // Return tagged armor
                     CompoundTag tag = baseStack.getTag();
-                    if (!tag.contains("LinerItem")) tag.putString("LinerItem", linerStack.getItem().getRegistryName().toString());
+                    //if (!tag.contains("LinerItem")) tag.putString("LinerItem", linerStack.getItem().getRegistryName().toString());
+                    if (!tag.contains("LinerItem")) tag.putString("LinerItem", "test");
                     returnStack.setTag(tag);
 
                     return returnStack;

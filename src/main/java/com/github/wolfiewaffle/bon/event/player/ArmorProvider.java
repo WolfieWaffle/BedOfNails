@@ -45,7 +45,6 @@ public class ArmorProvider {
                     linerMod = linerArray[0];
                 }
                 mod = ((1f - linerFactor) * mod) + (linerFactor * linerMod);
-                System.out.println(mod + " TOT " + linerMod);
 
                 // Thermal Tuning: Nullify mod if it points away from optimal temperature
                 if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) {
@@ -68,7 +67,6 @@ public class ArmorProvider {
                     linerInsulMod = linerArray[insulIndex];
                 }
                 insulation = ((1f - linerFactor) * insulation) + (linerFactor * linerInsulMod);
-                System.out.println(insulation + " ISN " + linerInsulMod);
 
                 // Thermal Tuning: Nullify insulation if it is bringing you away from optimal temperature
                 if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) {
