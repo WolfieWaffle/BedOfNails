@@ -1,5 +1,6 @@
 package com.github.wolfiewaffle.bon.recipe;
 
+import com.github.wolfiewaffle.bon.BONMod;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.CompoundTag;
@@ -100,8 +101,7 @@ public class LinerRecipe extends CustomRecipe {
 
                     // Return tagged armor
                     CompoundTag tag = baseStack.getTag();
-                    //if (!tag.contains("LinerItem")) tag.putString("LinerItem", linerStack.getItem().getRegistryName().toString());
-                    if (!tag.contains("LinerItem")) tag.putString("LinerItem", "test");
+                    if (!tag.contains("LinerItem")) tag.putString("LinerItem", linerStack.getItem().getRegistryName().toString());
                     returnStack.setTag(tag);
 
                     return returnStack;
@@ -119,7 +119,7 @@ public class LinerRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return new Serializer().setRegistryName("bon:liner");
+        return BONMod.linerRecipeRecipeSerializer;
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LinerRecipe> {

@@ -13,6 +13,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -42,6 +43,7 @@ public class BONMod {
     // Recipe Types
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPE_DEFERRED_REGISTER = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, MOD_ID);
     public static final RegistryObject<RecipeType<LinerRecipe>> LINER_RECIPE = RECIPE_TYPE_DEFERRED_REGISTER.register("liner", () -> new RecipeType<>() {});
+    public static final RecipeSerializer<LinerRecipe> linerRecipeRecipeSerializer = new LinerRecipe.Serializer();
 
     public BONMod() {
         // Register the setup method for modloading
@@ -53,7 +55,7 @@ public class BONMod {
 
         // For recipe types
         RECIPE_TYPE_DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-
+        linerRecipeRecipeSerializer.setRegistryName(new ResourceLocation("bon:liner"));
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -87,6 +89,6 @@ public class BONMod {
 
     @SubscribeEvent //ModBus, can't use addListener due to nested genetics.
     public static void registerRecipeSerialziers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-        event.getRegistry().register(new LinerRecipe.Serializer().setRegistryName("bon:liner"));
+        event.getRegistry().register(linerRecipeRecipeSerializer);
     }
 }
