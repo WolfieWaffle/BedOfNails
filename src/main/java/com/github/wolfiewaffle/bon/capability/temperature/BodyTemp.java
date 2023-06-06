@@ -57,14 +57,14 @@ public class BodyTemp {
                 entry(Items.NETHERITE_CHESTPLATE, new float[]{  1f, -4f, -4f}),
                 entry(Items.NETHERITE_LEGGINGS, new float[]{    1f, -4f, -4f}),
                 entry(Items.NETHERITE_BOOTS, new float[]{       1f, -4f, -4f}),
-                entry(TANItems.LEAF_HELMET, new float[]{        -2.5f, 3f, 0f}),
-                entry(TANItems.LEAF_CHESTPLATE, new float[]{    -2.5f, 3f, 0f}),
-                entry(TANItems.LEAF_LEGGINGS, new float[]{      -2.5f, 3f, 0f}),
-                entry(TANItems.LEAF_BOOTS, new float[]{         -2.5f, 3f, 0f}),
-                entry(TANItems.WOOL_HELMET, new float[]{        5f, -2f, 6f}),
-                entry(TANItems.WOOL_CHESTPLATE, new float[]{    5f, -2f, 6f}),
-                entry(TANItems.WOOL_LEGGINGS, new float[]{      5f, -2f, 6f}),
-                entry(TANItems.WOOL_BOOTS, new float[]{         5f, -2f, 6f})
+                entry(TANItems.LEAF_HELMET.get(), new float[]{        -2.5f, 3f, 0f}),
+                entry(TANItems.LEAF_CHESTPLATE.get(), new float[]{    -2.5f, 3f, 0f}),
+                entry(TANItems.LEAF_LEGGINGS.get(), new float[]{      -2.5f, 3f, 0f}),
+                entry(TANItems.LEAF_BOOTS.get(), new float[]{         -2.5f, 3f, 0f}),
+                entry(TANItems.WOOL_HELMET.get(), new float[]{        5f, -2f, 6f}),
+                entry(TANItems.WOOL_CHESTPLATE.get(), new float[]{    5f, -2f, 6f}),
+                entry(TANItems.WOOL_LEGGINGS.get(), new float[]{      5f, -2f, 6f}),
+                entry(TANItems.WOOL_BOOTS.get(), new float[]{         5f, -2f, 6f})
         );
     }
 

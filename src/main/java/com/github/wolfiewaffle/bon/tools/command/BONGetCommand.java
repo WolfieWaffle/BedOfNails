@@ -9,7 +9,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
@@ -30,16 +30,16 @@ public class BONGetCommand {
         if (BodyTemp.MOD_MAP.containsKey(player)) {
             List<TempModifier> modifiers = BodyTemp.MOD_MAP.get(player);
 
-            player.displayClientMessage(new TextComponent(""), false);
+            player.displayClientMessage(Component.m_237113_(""), false);
 
             // Display Target Mods
             for (TempModifier mod : modifiers) {
-                player.displayClientMessage(new TextComponent(mod.toString()), false);
+                player.displayClientMessage(Component.m_237113_(mod.toString()), false);
             }
 
-            player.displayClientMessage(new TextComponent(""), false);
+            player.displayClientMessage(Component.m_237113_(""), false);
 
-            player.displayClientMessage(new TextComponent(""), false);
+            player.displayClientMessage(Component.m_237113_(""), false);
         }
 
         return Command.SINGLE_SUCCESS;

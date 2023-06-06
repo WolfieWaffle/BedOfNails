@@ -10,18 +10,18 @@ import com.github.wolfiewaffle.bon.network.BonNetworkInit;
 import com.github.wolfiewaffle.bon.recipe.LinerRecipe;
 import com.github.wolfiewaffle.bon.tools.command.BONCommands;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -43,7 +43,9 @@ public class BONMod {
     // Recipe Types
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPE_DEFERRED_REGISTER = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, MOD_ID);
     public static final RegistryObject<RecipeType<LinerRecipe>> LINER_RECIPE = RECIPE_TYPE_DEFERRED_REGISTER.register("liner", () -> new RecipeType<>() {});
-    public static final RecipeSerializer<LinerRecipe> linerRecipeRecipeSerializer = new LinerRecipe.Serializer();
+
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_DEFERRED_REGISTER = DeferredRegister.create(Registry.RECIPE_SERIALIZER_REGISTRY, MOD_ID);
+    public static final RegistryObject<LinerRecipe.Serializer> LINER_RECIPE_SERIALIZER = RECIPE_SERIALIZER_DEFERRED_REGISTER.register("oil_can", LinerRecipe.Serializer::new);
 
     public BONMod() {
         // Register the setup method for modloading
@@ -55,7 +57,7 @@ public class BONMod {
 
         // For recipe types
         RECIPE_TYPE_DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-        linerRecipeRecipeSerializer.setRegistryName(new ResourceLocation("bon:liner"));
+        RECIPE_SERIALIZER_DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -77,18 +79,24 @@ public class BONMod {
     }
 
     @SubscribeEvent
+    public static void registerOverlay(RegisterGuiOverlaysEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
+
+        event.registerAboveAll(BONMod.MOD_ID + "_temp_text", (gui, poseStack, partialTick, screenWidth, screenHeight) -> {
+            System.out.println("REDNER ");
+            gui.getFont().draw(poseStack, "test", (float)(minecraft.screen.width / 2 - minecraft.font.width("test") / 2), 9, 0);
+            gui.renderHealth(10, 100, poseStack);
+        });
+    }
+
+    @SubscribeEvent
     public void tooltipEvent(final ItemTooltipEvent event) {
         Item item = ArmorProvider.getLinerItem(event.getItemStack());
 
         if (item != Items.AIR) {
-            MutableComponent component = new TextComponent("Lined with ").withStyle(ChatFormatting.GOLD);
+            MutableComponent component = Component.m_237113_("Lined with ").withStyle(ChatFormatting.GOLD);
             component.append(new ItemStack(item).getHoverName());
             event.getToolTip().add(component);
         }
-    }
-
-    @SubscribeEvent //ModBus, can't use addListener due to nested genetics.
-    public static void registerRecipeSerialziers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-        event.getRegistry().register(linerRecipeRecipeSerializer);
     }
 }

@@ -109,11 +109,11 @@ public class PlayerTickEventHandler {
             if (Math.abs(changeAmount) > Math.abs(tempDiff)) currentTemp = target; // Prevent overshooting
 
             // Effects
-            if (player.hasEffect(TANEffects.CLIMATE_CLEMENCY)) {
+            if (player.hasEffect(TANEffects.CLIMATE_CLEMENCY.get())) {
                 currentTemp = 70f;
             } else {
                 if (player.hasEffect(MobEffects.FIRE_RESISTANCE) && currentTemp > 80f) currentTemp = 80f;
-                if (player.hasEffect(TANEffects.ICE_RESISTANCE) && currentTemp < 60f) currentTemp = 60f;
+                if (player.hasEffect(TANEffects.ICE_RESISTANCE.get()) && currentTemp < 60f) currentTemp = 60f;
             }
 
             // Apply
@@ -145,8 +145,8 @@ public class PlayerTickEventHandler {
     }
 
     private TempModifier getWeatherMod(Player player) {
-        BlockPos pos = player.blockPosition();
-        Level world = player.getLevel();
+        BlockPos pos = player.m_20183_(); // block pos
+        Level world = player.level;
 
         if (world.isRainingAt(pos.above())) {
             return new TempModifier("weather", -25f);
@@ -156,8 +156,8 @@ public class PlayerTickEventHandler {
     }
 
     private TempModifier getBlockMod(Player player, float currentWetness) {
-        BlockPos pos = player.blockPosition();
-        Level world = player.getLevel();
+        BlockPos pos = player.getOnPos();
+        Level world = player.level;
         int radius = 3;
         float totalTemp = 0f;
 //        float totalBlocks = 0f;
@@ -250,7 +250,7 @@ public class PlayerTickEventHandler {
                 // Thermal Tuning
                 float optimalDirection = BodyTemp.OPTIMAL_TEMP - currentTemp;
                 if (optimalDirection <= 0f) {
-                    if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) addInsulation = 0f;
+                    if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING.get(), stack) > 0) addInsulation = 0f;
                 }
 
                 insulation += addInsulation;
@@ -312,7 +312,7 @@ public class PlayerTickEventHandler {
 
         for (int x = -BIOME_RANGE_CHUNKS; x < BIOME_RANGE_CHUNKS + 1; x++) {
             for (int z = -BIOME_RANGE_CHUNKS; z < BIOME_RANGE_CHUNKS + 1; z++) {
-                BlockPos newPos = pos.offset(x * 16, 0, z * 16);
+                BlockPos newPos = pos.m_7918_(x * 16, 0, z * 16); //offset
                 if (world.isLoaded(newPos)) biomeList.add(world.getBiome(newPos).value());
             }
         }

@@ -30,14 +30,14 @@ public class LinerRecipe extends CustomRecipe {
         linerItems.add(Items.LEATHER_CHESTPLATE);
         linerItems.add(Items.LEATHER_LEGGINGS);
         linerItems.add(Items.LEATHER_BOOTS);
-        linerItems.add(TANItems.LEAF_HELMET);
-        linerItems.add(TANItems.LEAF_CHESTPLATE);
-        linerItems.add(TANItems.LEAF_LEGGINGS);
-        linerItems.add(TANItems.LEAF_BOOTS);
-        linerItems.add(TANItems.WOOL_HELMET);
-        linerItems.add(TANItems.WOOL_CHESTPLATE);
-        linerItems.add(TANItems.WOOL_LEGGINGS);
-        linerItems.add(TANItems.WOOL_BOOTS);
+        linerItems.add(TANItems.LEAF_HELMET.get());
+        linerItems.add(TANItems.LEAF_CHESTPLATE.get());
+        linerItems.add(TANItems.LEAF_LEGGINGS.get());
+        linerItems.add(TANItems.LEAF_BOOTS.get());
+        linerItems.add(TANItems.WOOL_HELMET.get());
+        linerItems.add(TANItems.WOOL_CHESTPLATE.get());
+        linerItems.add(TANItems.WOOL_LEGGINGS.get());
+        linerItems.add(TANItems.WOOL_BOOTS.get());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class LinerRecipe extends CustomRecipe {
 
                     // Return tagged armor
                     CompoundTag tag = baseStack.getTag();
-                    if (!tag.contains("LinerItem")) tag.putString("LinerItem", linerStack.getItem().getRegistryName().toString());
+                    if (!tag.contains("LinerItem")) tag.putString("LinerItem", ForgeRegistries.ITEMS.getKey(linerStack.getItem()).toString());
                     returnStack.setTag(tag);
 
                     return returnStack;
@@ -119,10 +119,10 @@ public class LinerRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return BONMod.linerRecipeRecipeSerializer;
+        return BONMod.LINER_RECIPE_SERIALIZER.get();
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LinerRecipe> {
+    public static class Serializer implements RecipeSerializer<LinerRecipe> {
 
         public LinerRecipe fromJson(ResourceLocation resourceLocation, JsonObject json) {
             return new LinerRecipe(resourceLocation);

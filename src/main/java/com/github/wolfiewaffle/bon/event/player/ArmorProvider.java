@@ -47,7 +47,7 @@ public class ArmorProvider {
                 mod = ((1f - linerFactor) * mod) + (linerFactor * linerMod);
 
                 // Thermal Tuning: Nullify mod if it points away from optimal temperature
-                if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) {
+                if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING.get(), stack) > 0) {
                     if (Math.signum(mod) != Math.signum(optimalDirection)) mod = 0f;
                 }
                 totalMod += mod;
@@ -69,7 +69,7 @@ public class ArmorProvider {
                 insulation = ((1f - linerFactor) * insulation) + (linerFactor * linerInsulMod);
 
                 // Thermal Tuning: Nullify insulation if it is bringing you away from optimal temperature
-                if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING, stack) > 0) {
+                if (EnchantmentHelper.getItemEnchantmentLevel(TANEnchantments.THERMAL_TUNING.get(), stack) > 0) {
                     // Insulation is based on ambient, so if ambient matches optimal, it should be good
                     // HOWEVER insulation REDUCES ambient effects, so we keep it if it DOESN'T match
                     // We must also multiply by the sign of the insulation, since it can be negative
